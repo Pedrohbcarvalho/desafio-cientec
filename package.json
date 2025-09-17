@@ -3,14 +3,14 @@
   "version": "1.0.0",
   "description": "Repositório usado para resolução do desafio do processo seletivo da Cientec.",
   "type": "module",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "start": "node ."
   },
   "repository": {
