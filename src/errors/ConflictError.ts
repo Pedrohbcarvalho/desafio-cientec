@@ -1,13 +1,7 @@
-export class ConflictError extends Error {
+import { HttpError } from "./HttpError.js";
 
-    private _status: Number;
-
+export class ConflictError extends HttpError {
     constructor(message: string) {
-        super(message);
-        this._status = 409;
-    }
-
-    get status(): Number {
-        return this._status;
+        super(message, 409);
     }
 }

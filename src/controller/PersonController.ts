@@ -1,5 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import { parse } from 'url';
+import { PersonService } from '../service/PersonService.js';
+import { Person as PersonModel } from '../model/Person.js';
+import { HttpError } from '../errors/HttpError.js';
 
 interface Person {
     cpf: string;
@@ -16,8 +19,11 @@ const mockDatabase: Person[] = [
 
 export class PersonController {
     private static instance: PersonController;
+    private personService: PersonService;
 
-    private constructor() { }
+    private constructor() {
+        this.personService = new PersonService();
+    }
 
     public static getInstance(): PersonController {
         if (!PersonController.instance) {
@@ -48,9 +54,26 @@ export class PersonController {
         }
     }
 
-    public getPersonByCpf(req: IncomingMessage, res: ServerResponse, cpf: string): void {
-        const user = mockDatabase.find(user => user.cpf === cpf);
-
+    public async getPersonByCpf(req: IncomingMessage, res: ServerResponse, cpf: string): Promise<void> {
+        try {
+            const person: PersonModel = await this.personService.getPersonByCpf(cpf);
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify(person));
+        }
+        catch (error) {
+            if (error instanceof HttpError) {
+                res.statusCode = error.status;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ message: error.message }));
+            }
+            else {
+                res.statusCode = 500;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ message: (error as Error).message }));
+            }
+        }
+        /*
         if (user) {
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
@@ -59,7 +82,7 @@ export class PersonController {
             res.statusCode = 404;
             res.setHeader('Content-Type', 'application/json');
             res.end(JSON.stringify({ message: 'User not found' }));
-        }
+        } */
     }
 
     public createPerson(req: IncomingMessage, res: ServerResponse): void {

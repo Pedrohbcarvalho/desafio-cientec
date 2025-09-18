@@ -13,25 +13,25 @@ export class PersonService {
         this.personRepository = PersonRepository.getInstance();
     }
 
-    public getPersonByName(name: string): Person[] {
+    public async getPersonByName(name: string): Promise<Person[]> {
         if (name.trim().length === 0)
             throw new BusinessLogicError('Os dados de busca devem conter alguma informação.');
 
-        const personCollection = this.personRepository.findPersonByName(name);
+        const personCollection = await this.personRepository.findPersonByName(name);
         if (personCollection.length === 0)
             throw new NotFoundError('Não foi possível encontrar pessoas com esse nome.');
 
         return personCollection;
     }
 
-    public getPersonByCpf(cpfParam: string): Person {
+    public async getPersonByCpf(cpfParam: string): Promise<Person> {
         if (cpfParam.trim().length === 0)
             throw new BusinessLogicError('Os dados de busca devem conter alguma informação.');
 
         if (!cpf.isValid(cpfParam))
             throw new BusinessLogicError('O CPF informado não é válido.');
 
-        const person = this.personRepository.findPersonByCpf(cpfParam);
+        const person = await this.personRepository.findPersonByCpf(cpfParam);
         if (!person)
             throw new NotFoundError('Não foi possível encontrar pessoas com esse cpf.');
 

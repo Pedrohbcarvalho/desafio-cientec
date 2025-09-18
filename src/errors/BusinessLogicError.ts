@@ -1,13 +1,7 @@
-export class BusinessLogicError extends Error {
+import { HttpError } from "./HttpError.js";
 
-    private _status: Number;
-
+export class BusinessLogicError extends HttpError {
     constructor(message: string) {
-        super(message);
-        this._status = 400;
-    }
-
-    get status(): Number {
-        return this._status;
+        super(message, 400);
     }
 }

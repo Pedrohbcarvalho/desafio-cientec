@@ -1,13 +1,7 @@
-export class NotFoundError extends Error {
+import { HttpError } from "./HttpError.js";
 
-    private _status: Number;
-
+export class NotFoundError extends HttpError {
     constructor(message: string) {
-        super(message);
-        this._status = 404;
-    }
-
-    get status(): Number {
-        return this._status;
+        super(message, 404);
     }
 }
