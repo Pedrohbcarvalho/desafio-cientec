@@ -26,7 +26,11 @@
   "homepage": "https://github.com/Pedrohbcarvalho/desafio-cientec#readme",
   "devDependencies": {
     "@types/node": "^24.5.1",
+    "prisma": "^6.16.2",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
+  },
+  "dependencies": {
+    "cpf-cnpj-validator": "^1.0.3"
   }
 }
