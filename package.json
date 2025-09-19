@@ -8,14 +8,12 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist",
     "build:static": "copyfiles -u 1 \"src/**/*.{html,css,js}\" dist",
     "build:prisma": "prisma migrate deploy && prisma generate",
     "build": "npm run clean && npm run build:prisma && tsc && npm run build:static",
     "start:dev": "tsx watch src/index.ts",
     "start:prod": "node dist/index.js",
-    "postinstall": "prisma generate",
     "prisma:migrate:dev": "prisma migrate dev",
     "prisma:studio": "prisma studio",
     "prisma:reset": "prisma migrate reset --force"
@@ -32,10 +30,11 @@
   },
   "homepage": "https://github.com/Pedrohbcarvalho/desafio-cientec#readme",
   "devDependencies": {
-    "@types/node": "^24.5.1",
+    "@types/node": "^24.5.2",
     "copyfiles": "^2.4.1",
     "prisma": "^6.16.2",
     "rimraf": "^6.0.1",
+    "ts-node": "^10.9.2",
     "tsx": "^4.20.5",
     "typescript": "^5.9.2"
   },

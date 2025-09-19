@@ -1,33 +1,33 @@
 const API_BASE_URL = 'http://localhost:3000';
 
-const cadastroForm = document.getElementById('cadastro-form');
-const nomeInput = document.getElementById('nome');
+const registerForm = document.getElementById('cadastro-form');
+const nameInput = document.getElementById('nome');
 const cpfInput = document.getElementById('cpf');
 const searchInput = document.getElementById('search-input');
 const resultsContainer = document.getElementById('results-container');
 const searchTypeRadios = document.querySelectorAll('input[name="search-type"]');
-const cadastroFeedback = document.getElementById('cadastro-feedback');
+const registerFeedback = document.getElementById('cadastro-feedback');
 
-function mostrarMensagemCadastro(mensagem, tipo = 'erro') {
-    cadastroFeedback.innerHTML = '';
+function showRegisterMessage(message, type = 'erro') {
+    registerFeedback.innerHTML = '';
 
     const p = document.createElement('p');
-    p.textContent = mensagem;
+    p.textContent = message;
 
-    if (tipo === 'sucesso') {
+    if (type === 'sucesso') {
         p.className = 'no-results sucess';
     } else {
         p.className = 'no-results error';
     }
 
-    cadastroFeedback.appendChild(p);
+    registerFeedback.appendChild(p);
 
     setTimeout(() => {
         p.remove();
     }, 5000);
 }
 
-function formatarCPF(cpf) {
+function formatCpf(cpf) {
     cpf = cpf.replace(/\D/g, '');
     cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
     cpf = cpf.replace(/(\d{3})(\d)/, '$1.$2');
@@ -35,22 +35,22 @@ function formatarCPF(cpf) {
     return cpf;
 }
 
-function validarCPF(cpf) {
-    const cpfLimpo = cpf.replace(/\D/g, '');
-    return cpfLimpo.length === 11;
+function validateCpf(cpf) {
+    const cpfAux = cpf.replace(/\D/g, '');
+    return cpfAux.length === 11;
 }
 
-function mostrarLoading(container, mensagem = 'Carregando...') {
+function showLoading(container, message = 'Carregando...') {
     container.innerHTML = `
         <div class="loading">
-            <p>${mensagem}</p>
+            <p>${message}</p>
         </div>
     `;
 }
 
-async function cadastrarPessoa(nome, cpf) {
+async function registerPerson(name, cpf) {
     try {
-        mostrarLoading(resultsContainer, 'Cadastrando usuário...');
+        showLoading(resultsContainer, 'Cadastrando usuário...');
 
         const response = await fetch(`${API_BASE_URL}/person`, {
             method: 'POST',
@@ -58,7 +58,7 @@ async function cadastrarPessoa(nome, cpf) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                name: nome,
+                name: name,
                 cpf: cpf.replace(/\D/g, '')
             })
         });
@@ -76,9 +76,9 @@ async function cadastrarPessoa(nome, cpf) {
     }
 }
 
-async function pesquisarPorNome(nome) {
+async function searchByName(name) {
     try {
-        const response = await fetch(`${API_BASE_URL}/person?name=${encodeURIComponent(nome)}`);
+        const response = await fetch(`${API_BASE_URL}/person?name=${encodeURIComponent(name)}`);
         if (!response.ok) {
             throw new Error(`Erro HTTP: ${response.status}`);
         }
@@ -90,10 +90,10 @@ async function pesquisarPorNome(nome) {
     }
 }
 
-async function pesquisarPorCPF(cpf) {
+async function searchByCpf(cpf) {
     try {
-        const cpfLimpo = cpf.replace(/\D/g, '');
-        const response = await fetch(`${API_BASE_URL}/person/${cpfLimpo}`);
+        const cpfAux = cpf.replace(/\D/g, '');
+        const response = await fetch(`${API_BASE_URL}/person/${cpfAux}`);
         if (!response.ok) {
             if (response.status === 404) {
                 return { success: true, data: [] };
@@ -109,70 +109,75 @@ async function pesquisarPorCPF(cpf) {
 }
 
 cpfInput.addEventListener('input', function (e) {
-    e.target.value = formatarCPF(e.target.value);
+    e.target.value = formatCpf(e.target.value);
 });
 
-cadastroForm.addEventListener('submit', async function (e) {
+registerForm.addEventListener('submit', async function (e) {
     e.preventDefault();
 
-    const nome = nomeInput.value.trim();
+    const name = nameInput.value.trim();
     const cpf = cpfInput.value.trim();
 
-    if (!nome) {
-        mostrarMensagemCadastro('Por favor, digite o nome.', 'erro');
-        nomeInput.focus();
+    const nameMsg = nameInput.value;
+    const cpfMsg = cpfInput.value;
+
+    if (!name) {
+        showRegisterMessage('Por favor, digite o nome.', 'erro');
+        nameInput.focus();
         return;
     }
 
-    if (!validarCPF(cpf)) {
-        mostrarMensagemCadastro('Por favor, digite um CPF válido (11 dígitos).', 'erro');
+    if (!validateCpf(cpf)) {
+        showRegisterMessage('Por favor, digite um CPF válido (11 dígitos).', 'erro');
         cpfInput.focus();
         return;
     }
 
-    const submitBtn = cadastroForm.querySelector('button[type="submit"]');
+    const submitBtn = registerForm.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.disabled = true;
     submitBtn.textContent = 'Cadastrando...';
 
     try {
-        const resultado = await cadastrarPessoa(nome, cpf);
+        const result = await registerPerson(name, cpf);
 
-        if (resultado.success) {
-            cadastroForm.reset();
-            mostrarMensagemCadastro('Usuário cadastrado com sucesso!', 'sucesso');
+        if (result.success) {
+            registerForm.reset();
+
+            const message = `Usuário ${nameMsg} (CPF: ${formatCpf(cpfMsg)}) cadastrado com sucesso!`;
+            showRegisterMessage(message, 'sucesso');
 
             if (searchInput.value.trim()) {
-                realizarPesquisa();
+                makeSearch();
             } else {
-                exibirMensagemVazia();
+                showEmptyMessage();
             }
         } else {
-            mostrarMensagemCadastro(`Erro ao cadastrar usuário: ${resultado.error}`, 'erro');
+            showRegisterMessage(`Erro ao cadastrar usuário: ${result.error}`, 'erro');
         }
     } catch (error) {
-        mostrarMensagemCadastro(`Erro inesperado: ${error.message}`, 'erro');
+        showRegisterMessage(`Erro inesperado: ${error.message}`, 'erro');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = originalText;
     }
 });
 
-function getTipoPesquisa() {
-    const radioSelecionado = document.querySelector('input[name="search-type"]:checked');
-    return radioSelecionado ? radioSelecionado.value : 'nome';
+function getSearchType() {
+    const selectedRadio = document.querySelector('input[name="search-type"]:checked');
+    return selectedRadio ? selectedRadio.value : 'nome';
 }
 
-async function realizarPesquisa() {
-    const termo = searchInput.value.trim();
-    const tipoPesquisa = getTipoPesquisa();
+async function makeSearch() {
+    const search = searchInput.value.trim();
+    const searchType = getSearchType();
 
-    if (!termo) {
-        exibirMensagemVazia();
+    if (!search) {
+        showEmptyMessage();
         return;
     }
 
-    if (termo.length < 2) {
+    if (search.length < 2) {
         resultsContainer.innerHTML = `
             <p class="no-results">
                 Digite pelo menos 2 caracteres para pesquisar.
@@ -181,23 +186,23 @@ async function realizarPesquisa() {
         return;
     }
 
-    mostrarLoading(resultsContainer, 'Pesquisando...');
+    showLoading(resultsContainer, 'Pesquisando...');
 
     try {
-        let resultado;
+        let result;
 
-        if (tipoPesquisa === 'nome') {
-            resultado = await pesquisarPorNome(termo);
-        } else if (tipoPesquisa === 'cpf') {
-            resultado = await pesquisarPorCPF(termo);
+        if (searchType === 'nome') {
+            result = await searchByName(search);
+        } else if (searchType === 'cpf') {
+            result = await searchByCpf(search);
         }
 
-        if (resultado.success) {
-            exibirResultados(resultado.data, termo, tipoPesquisa);
+        if (result.success) {
+            showResults(result.data, search, searchType);
         } else {
             resultsContainer.innerHTML = `
                 <p class="no-results error">
-                    Nenhum usuário encontrado para "${termo}" na pesquisa por ${tipoPesquisa}.
+                    Nenhum usuário encontrado para "${search}" na pesquisa por ${searchType}.
                 </p>
             `;
         }
@@ -210,25 +215,25 @@ async function realizarPesquisa() {
     }
 }
 
-function exibirResultados(resultados, termo, tipoPesquisa) {
-    if (!resultados || resultados.length === 0) {
+function showResults(results, search, searchType) {
+    if (!results || results.length === 0) {
         resultsContainer.innerHTML = `
             <p class="no-results error">
-                Nenhum usuário encontrado para "${termo}" na pesquisa por ${tipoPesquisa}.
+                Nenhum usuário encontrado para "${search}" na pesquisa por ${searchType}.
             </p>
         `;
         return;
     }
 
     let html = '';
-    resultados.forEach(usuario => {
-        const nome = usuario.name || usuario.nome;
-        const cpf = usuario.cpf;
-        const cpfFormatado = formatarCPF(cpf);
+    results.forEach(user => {
+        const name = user.name;
+        const cpf = user.cpf;
+        const cpfFormatado = formatCpf(cpf);
 
         html += `
             <div class="user-card">
-                <h4>${nome}</h4>
+                <h4>${name}</h4>
                 <p>CPF: ${cpfFormatado}</p>
             </div>
         `;
@@ -237,7 +242,7 @@ function exibirResultados(resultados, termo, tipoPesquisa) {
     resultsContainer.innerHTML = html;
 }
 
-function exibirMensagemVazia() {
+function showEmptyMessage() {
     resultsContainer.innerHTML = `
         <p class="no-results">
             Nenhum resultado encontrado. Use a barra de pesquisa acima.
@@ -247,39 +252,39 @@ function exibirMensagemVazia() {
 
 searchInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
-        realizarPesquisa();
+        makeSearch();
     }
 });
 
 searchTypeRadios.forEach(radio => {
     radio.addEventListener('change', function () {
         if (searchInput.value.trim()) {
-            realizarPesquisa();
+            makeSearch();
         }
     });
 });
 
 let searchTimeout;
 searchInput.addEventListener('input', function () {
-    const termo = this.value.trim();
+    const search = this.value.trim();
 
     clearTimeout(searchTimeout);
 
-    if (termo.length === 0) {
-        exibirMensagemVazia();
+    if (search.length === 0) {
+        showEmptyMessage();
         return;
     }
 
-    if (termo.length >= 2) {
+    if (search.length >= 2) {
         searchTimeout = setTimeout(() => {
-            realizarPesquisa();
+            makeSearch();
         }, 500);
     }
 });
 
 document.addEventListener('DOMContentLoaded', function () {
-    exibirMensagemVazia();
-    nomeInput.focus();
+    showEmptyMessage();
+    nameInput.focus();
 
     fetch(`${API_BASE_URL}/person?name=teste`)
         .then(response => {
