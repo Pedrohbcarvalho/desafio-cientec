@@ -18,7 +18,7 @@ const mimeTypes: { [key: string]: string } = {
 };
 
 export async function serveStaticFile(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
-    const url = req.url === '/' ? '/html/index.html' : req.url;
+    const url = req.url === '/' ? '/index.html' : req.url;
     const filePath = path.join(publicPath, url ?? "");
 
     const isSafePath = path.resolve(filePath).startsWith(path.resolve(publicPath));
