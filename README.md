@@ -5,9 +5,8 @@
 ## Tecnologias Utilizadas
 
 - **Frontend:** HTML/CSS e JavaScript
-- **Backend:** Node.js com Typescript
+- **Backend:** Node.js com TypeScript
 - **Banco de Dados:** SQLite
-- **Outras ferramentas:** (Ex: Docker, Webpack, Babel)
 
 ## Instalação e uso
 
