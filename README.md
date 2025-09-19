@@ -30,9 +30,16 @@ Siga os passos abaixo para instalar e rodar o projeto localmente.
     npm install
     ```
 5.  **Configure as variáveis de ambiente:**
-      - Crie um arquivo `.env` na raiz do projeto. <img src=https://pedroaphrodi.s-ul.eu/OLB67dEO alt="Arquivo .env">
-
-      - No arquivo criado, defina a DATABASE_URL como mostrado abaixo, ou no arquivo .env.example.
+      - Crie uma cópia do arquivo de exemplo .env.example e renomeie-a para .env.
+         - Linux
+            ```
+            cp .env.example .env 
+            ```
+        - Windows
+            ```
+            copy .env.example .env
+             ```
+      - O arquivo .env já conterá a variável necessária:
         ```
         DATABASE_URL="file:./prisma/desafioCientec.db"
         ```
