@@ -56,7 +56,7 @@ Siga os passos abaixo para instalar e rodar o projeto localmente.
    ├─ errors/       Erros customizados para tratamento de exceção
    ├─ model/        Modelos (representação dos modelos de negócio)
    ├─ repository/   Repositório (camada de acesso a dados)
-   ├─ router/       Definição das rotas da API e de como lidar com arquivos estáticos
+   ├─ router/       Direcionar as requisições da API para os controladores
    ├─ service/      Serviços (camada de regras de negócio)
    └─ view/         Lida com os arquivos de apresentação do site 
       ├─ scripts/   Script necessário para o dinamismo da tela
