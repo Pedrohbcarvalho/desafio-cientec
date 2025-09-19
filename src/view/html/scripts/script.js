@@ -8,29 +8,24 @@ const resultsContainer = document.getElementById('results-container');
 const searchTypeRadios = document.querySelectorAll('input[name="search-type"]');
 const cadastroFeedback = document.getElementById('cadastro-feedback');
 
-// FUNÇÃO ATUALIZADA PARA USAR AS CLASSES 'no-results'
 function mostrarMensagemCadastro(mensagem, tipo = 'erro') {
-    // Limpa mensagens anteriores
     cadastroFeedback.innerHTML = '';
 
     const p = document.createElement('p');
     p.textContent = mensagem;
 
-    // Define a classe com base no tipo da mensagem
     if (tipo === 'sucesso') {
-        p.className = 'no-results sucess'; // Classe para sucesso
+        p.className = 'no-results sucess';
     } else {
-        p.className = 'no-results error';   // Classe para erro, igual à da pesquisa
+        p.className = 'no-results error';
     }
 
     cadastroFeedback.appendChild(p);
 
-    // Limpa a mensagem após 5 segundos
     setTimeout(() => {
         p.remove();
     }, 5000);
 }
-
 
 function formatarCPF(cpf) {
     cpf = cpf.replace(/\D/g, '');
