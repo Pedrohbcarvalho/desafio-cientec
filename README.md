@@ -1,11 +1,12 @@
+
 # Desafio Cientec
 
-> Projeto feito para resolver o desafio
+> Projeto feito para resolver o desafio proposto pela Cientec.
 
 ## Tecnologias Utilizadas
 
 - **Frontend:** HTML/CSS e JavaScript
-- **Backend:** Node.js com TypeScript
+- **Backend:** Node.js com Typescript
 - **Banco de Dados:** SQLite
 
 ## Instalação e uso
@@ -61,6 +62,8 @@ Siga os passos abaixo para instalar e rodar o projeto localmente.
       ├─ scripts/   Script necessário para o dinamismo da tela
       └─ styles/    Estilização da página
 ```    
+## Arquitetura do projeto
+<img src=https://pedroaphrodi.s-ul.eu/8SySoLhr alt="Arquitetura do projeto">
 
 ## Autor
 
