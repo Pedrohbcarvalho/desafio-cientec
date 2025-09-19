@@ -9,9 +9,14 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsc",
-    "dev": "tsx watch src/index.ts",
-    "start": "node ."
+    "build": "prisma generate && tsc",
+    "start:dev": "tsx watch src/index.ts",
+    "start:prod": "node dist/index.js",
+    "postinstall": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "prisma:reset": "prisma migrate reset --force"
   },
   "repository": {
     "type": "git",

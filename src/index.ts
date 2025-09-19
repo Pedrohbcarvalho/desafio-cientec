@@ -2,8 +2,6 @@ import http from 'http';
 import { handleRequest, get, post } from './router/router.js';
 import { serveStaticFile } from './router/staticHandler.js';
 import { PersonController } from './controller/PersonController.js';
-import { IncomingMessage, ServerResponse } from 'http';
-import { parse } from 'url';
 
 const hostname = 'localhost';
 const port = 3000;

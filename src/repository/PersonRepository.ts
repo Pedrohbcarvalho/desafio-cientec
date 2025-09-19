@@ -1,5 +1,4 @@
 import { PrismaClient } from '@prisma/client';
-import { Person as PrismaPerson } from '@prisma/client';
 import { Person } from "../model/Person.js";
 
 export class PersonRepository {
@@ -23,7 +22,7 @@ export class PersonRepository {
         });
 
         if (personData) {
-            return new Person(personData.name, personData.cpf);
+            return { name: personData.name, cpf: personData.cpf } as Person;
         }
 
         return null;
@@ -38,27 +37,16 @@ export class PersonRepository {
             },
         });
 
-        return peopleData.map(p => new Person(p.name, p.cpf));
+        return peopleData;
     }
 
-    public async savePerson(person: Person): Promise<void> {
+    public async savePerson(person: Person): Promise<Person> {
         await this.prisma.person.upsert({
             where: { cpf: person.cpf },
             update: { name: person.name },
-            create: { cpf: person.cpf, name: person.name },
+            create: { cpf: person.cpf!, name: person.name! },
         });
+
+        return { name: person.name, cpf: person.cpf } as Person;
     }
-
-    /*
-    public findPersonByCpf(cpf: string): Person {
-
-    }
-
-    public findPersonByName(name: string): Person[] {
-
-    }
-
-    public savePerson(person: Person): void {
-
-    }*/
 }
