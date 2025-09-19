@@ -10,7 +10,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "clean": "rimraf dist",
-    "build:static": "copyfiles -u 1 \"src/**/*.{html,css}\" dist",
+    "build:static": "copyfiles -u 1 \"src/**/*.{html,css,js}\" dist",
     "build:prisma": "prisma migrate deploy && prisma generate",
     "build": "npm run clean && npm run build:prisma && tsc && npm run build:static",
     "start:dev": "tsx watch src/index.ts",
